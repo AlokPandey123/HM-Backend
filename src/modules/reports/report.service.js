@@ -4,6 +4,7 @@ const OPD = require('../opd/opd.model');
 const Billing = require('../billing/billing.model');
 const Return = require('../returns/return.model');
 const Medicine = require('../medicine/medicine.model');
+const RegularCheckup = require('../regularCheckup/regularCheckup.model');
 const ApiError = require('../../utils/ApiError');
 
 const getDashboardStats = async () => {
@@ -16,6 +17,7 @@ const getDashboardStats = async () => {
     totalBills, todayRevenue,
     pendingTests, completedTests,
     lowStockCount,
+    totalCheckups, todayCheckups, feeApplicableCheckups, checkupRevenue,
   ] = await Promise.all([
     Patient.countDocuments({ isActive: true }),
     Patient.countDocuments({ createdAt: { $gte: today } }),
@@ -26,6 +28,10 @@ const getDashboardStats = async () => {
     TestBooking.countDocuments({ 'tests.status': 'pending' }),
     TestBooking.countDocuments({ 'tests.status': 'completed' }),
     Medicine.countDocuments({ isActive: true, $expr: { $lte: ['$currentStock', '$minimumStock'] } }),
+    RegularCheckup.countDocuments(),
+    RegularCheckup.countDocuments({ createdAt: { $gte: today } }),
+    RegularCheckup.countDocuments({ feeApplicable: true }),
+    RegularCheckup.aggregate([{ $match: { feeApplicable: true } }, { $group: { _id: null, total: { $sum: '$fees' } } }]),
   ]);
 
   return {
@@ -34,6 +40,12 @@ const getDashboardStats = async () => {
     billing: { total: totalBills, todayRevenue: todayRevenue[0]?.total || 0 },
     tests: { pending: pendingTests, completed: completedTests },
     medicine: { lowStock: lowStockCount },
+    regularCheckups: {
+      total: totalCheckups,
+      today: todayCheckups,
+      feeApplicable: feeApplicableCheckups,
+      totalRevenue: checkupRevenue[0]?.total || 0,
+    },
   };
 };
 
