@@ -17,6 +17,11 @@ const getPatientById = asyncHandler(async (req, res) => {
   sendSuccess(res, patient, 'Patient retrieved');
 });
 
+const getPatientDetails = asyncHandler(async (req, res) => {
+  const details = await patientService.getPatientDetails(req.params.id);
+  sendSuccess(res, details, 'Patient details retrieved');
+});
+
 const updatePatient = asyncHandler(async (req, res) => {
   const patient = await patientService.updatePatient(req.params.id, req.body);
   sendSuccess(res, patient, 'Patient updated');
@@ -27,4 +32,4 @@ const deletePatient = asyncHandler(async (req, res) => {
   sendSuccess(res, null, 'Patient deleted');
 });
 
-module.exports = { createPatient, getPatients, getPatientById, updatePatient, deletePatient };
+module.exports = { createPatient, getPatients, getPatientById, getPatientDetails, updatePatient, deletePatient };

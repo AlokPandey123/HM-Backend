@@ -21,6 +21,8 @@ const billingRoutes = require('./modules/billing/billing.routes');
 const returnRoutes = require('./modules/returns/return.routes');
 const reportRoutes = require('./modules/reports/report.routes');
 const paymentRoutes = require('./modules/payment/payment.routes');
+const doctorRoutes = require('./modules/doctors/doctor.routes');
+const regularCheckupRoutes = require('./modules/regularCheckup/regularCheckup.routes');
 
 const app = express();
 
@@ -77,6 +79,8 @@ app.use('/api/billing', billingRoutes);
 app.use('/api/returns', returnRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/doctors', doctorRoutes);
+app.use('/api/regular-checkup', regularCheckupRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 

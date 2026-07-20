@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const MODULES = [
   'dashboard', 'cities', 'admin_users', 'patients',
   'opd', 'pathology', 'billing', 'medicine_stock', 'reports', 'returns',
+  'doctors', 'regular_checkup',
 ];
 
 const permissionSchema = new mongoose.Schema({

@@ -26,7 +26,9 @@ const createBill = async (data, createdBy) => {
 
   return Billing.create({
     billId,
-    patient: data.patient,
+    customerType: data.customerType || 'patient',
+    patient: data.patient || undefined,
+    walkInCustomer: data.walkInCustomer,
     billType: data.billType || 'mixed',
     items: data.items,
     subtotal,

@@ -9,6 +9,7 @@ const patientSchema = new mongoose.Schema({
   city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
   address: { type: String, trim: true },
   marriageYear: { type: Number },
+  patientType: { type: String, enum: ['regular', 'irregular'], required: true, default: 'regular' },
   isActive: { type: Boolean, default: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });

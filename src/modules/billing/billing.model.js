@@ -13,7 +13,12 @@ const billingItemSchema = new mongoose.Schema({
 
 const billingSchema = new mongoose.Schema({
   billId: { type: String, unique: true },
-  patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
+  customerType: { type: String, enum: ['patient', 'walk-in'], default: 'patient' },
+  patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient' },
+  walkInCustomer: {
+    name: { type: String, trim: true },
+    phone: { type: String, trim: true },
+  },
   billType: { type: String, enum: ['opd', 'pathology', 'medicine', 'mixed'], default: 'mixed' },
   items: [billingItemSchema],
   subtotal: { type: Number, required: true },

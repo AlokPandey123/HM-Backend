@@ -12,11 +12,11 @@ const getOPDs = async (query = {}) => {
   const filter = {};
   if (patient) filter.patient = patient;
   if (paymentStatus) filter.paymentStatus = paymentStatus;
-  if (search) filter.doctor = { $regex: search, $options: 'i' };
 
   const [opds, total] = await Promise.all([
     OPD.find(filter)
       .populate('patient', 'name patientId phone')
+      .populate('doctor', 'name specialization')
       .populate('createdBy', 'name')
       .skip((page - 1) * limit)
       .limit(Number(limit))
@@ -27,7 +27,7 @@ const getOPDs = async (query = {}) => {
 };
 
 const getOPDById = async (id) => {
-  const opd = await OPD.findById(id).populate('patient').populate('createdBy', 'name');
+  const opd = await OPD.findById(id).populate('patient').populate('doctor', 'name specialization').populate('createdBy', 'name');
   if (!opd) throw new ApiError(404, 'OPD record not found');
   return opd;
 };
